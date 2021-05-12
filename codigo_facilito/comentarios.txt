@@ -1,0 +1,314 @@
+iniciar myswl server
+    mysql -u root -p 
+
+declarar una variable 
+
+    SET @nombre_variable = "valor_variable";
+
+    SET @nombre = "Codi";
+
+declarar multiples variables
+
+    SET @curso = "Base de datos ", @gestor = "MYSQL";
+
+obtener el valor de la variable almacenada
+
+    SELECT @nombre_cp;
+
+
+######################Tipo de Datos #############
+
+Tipos de datos
+En general, la mayoría de los servidores de base de datos nos permiten almacenar los mismo tipo de datos, como strings, fechas y número.
+
+En este post, listamos los tipos de datos que más utilizarás en tu día a día.
+
+ALFANUMÉRICOS
+CHAR
+VARCHAR
+En ambos casos nosotros debemos de especificar la longitud máxima que podrá almacenar el campo. Opcionalmente podemos definir el charset que almacenará.
+
+varchar(20) character set utf8
+Con MySQL nosotros podemos establecer el charset que usará la base de datos desde su creación create database nombre character set utf8;
+
+NÚMEROS ENTEROS
+Tipo	Rango
+Tinyint	-128 a 127
+Smallint	-32,768 a 32,767
+Mediumint	−8,388,608 a 8,388,607
+Int	−2,147,483,648 a 2,147,483,647
+Bigint	−9,223,372,036,854,775,808 a 9,223,372,036,854,775,807
+NÚMEROS FLOTANTES
+Para los flotantes encontraremos dos tipos
+
+Float
+Double
+En ambos casos nosotros debemos de especificar la cantidad de dígitos que almacenará la columna antes y después del punto (p,s)
+
+precio FLOAT(3, 2)
+En este caso la columna podrá almacenar hasta tres dígitos como enteros y dos después del punto decimal.
+
+Ejemplo 999.99
+
+TIEMPO
+Tipo	Formato default
+Date	YYYY-MM-DD
+Datetime	YYYY-MM-DD HH:MI:SS
+Timestamp	YYYY-MM-DD HH:MI:SS
+Time	HHH:MI:SS
+
+################## base de datos ################ 
+
+Crear una base de datos
+
+    CREATE DATABASE nombre_base;
+
+Para enlistar la base de datos
+
+    SHOW DATABASES;
+
+Para eliminar la base de datos, ***sin vuelta atras***
+
+    DROP DATABAS nombre_base;
+
+pasa seleccionar una base de datos
+
+    USE nombre_base;
+
+para saber en cual base de datos nos encontramos 
+
+    SELECT DATABASE();
+
+##################  TABLAS ####################
+
+para mostraar las tablas
+
+    SHOWDATABASE;
+
+
+Borrar una tabla
+
+    DROP TABLE nombre_tabla;
+
+Obtener informacion de una tabla
+
+    SHOW COLUMNS FROM nombre_tabla;
+
+    DESC nombre_tabla;
+
+Crear tablas aparti de otras
+
+    CREATE TABLE nombre_nueva_tabla LIKE nombre_tabla_base;
+
+Revisar la tabla con valores_registros
+
+    SELECT * FROM nombre_tabla;
+
+#######################INSERTAR REGSTROS ######
+
+insertar registors
+
+    INSERT INTO nombre_tabla (nombres_columnas) VALUES (valores_registros)
+
+insertar multiples registors
+
+    INSERT INTO Autores (Author_id,Nombre,Apellido,Genero,Fecha_nacimiento,Pais_origen) 
+    VALUES ("1",'Test Autor','Test apellido','M','1996-02-01','Mèxico' ),
+       ("2","Codi","Facilito""M","2018-01-01","México"),
+       ("3","Héctor","Galvan","M","1990-04-09","México"); 
+
+
+################EJECUTAR ARCHIVOS MySQL #################
+
+mysql -u usuario -p < ruta/archivo.sql (dentro de consolas) 
+
+SOURCE ruta/archivo; (dentro de MYSQL)
+
+SOURCE ~/Escritorio/Desarrollo/MYSQL/codigo_facilito/sentencias.sql
+
+
+###############CONDICIONAR SENTENCIAS ####################
+
+si la tabla existe la eliminara
+
+    DROP DATABASE IF  EXISTS libreria_cf;
+
+crea la tabla si no existe 
+
+    CREATE DATABASE IF NOT EXISTS libreria_cf;
+
+###############CONSULTAS REPIDAS ##################
+
+Para realizar comandos fueras de MYSQL en terminal
+
+mysql -u root -p libreria_cf -e "SELECT * FROM Autores"
+
+################## RESTRICCIONES ##########################
+
+Para evitar valores nulos (sin valor)
+
+    NOT NULL
+
+cuando necesitamos que un valor sea unico
+
+    UNIQUE
+
+para aginar un valor por default
+
+    DEFAULT condicion_default
+
+para asignar la fecha actual hay 2 formas
+
+    CURRENT_TIMESTAMP
+
+    NOW()
+
+paar evitar los numeros negativos en los INTEGER
+
+    UNSIGNED
+
+para almacenar solamente ciertas opciones Ejemplo "M" o "F"
+    ENUM('M','F')
+
+para  seleccionari una colimna como llave primaria 
+
+    PRIMARY KEY
+
+    book_id INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+
+para relacionar con otra columna se utilizan foreign key 
+
+     FOREIGN KEY (columna_local) REFERENCES tabla(llave_primaria)
+
+      FOREIGN KEY (Author_id) REFERENCES Autores(Author_id) 
+####################### MODIFICAR TABLA ##########################
+
+Agregar una nueva columna
+
+    ALTER TABLE
+
+    ALTER TABLE Libros ADD Ventas INT UNSIGNED NOT NULL;
+    ALTER TABLE Libros ADD stock INT UNSIGNED NOT NULL DEFAULT 10;
+
+Eliminar una columna 
+
+    ALTER TABLE Libros DROP COLUMN stock;
+
+Modificar tablas
+Nosotros podemos modificar la definición de una tabla una vez esta se haya creado, para ello, nos apoyaremos de la sentencia ALTER TABLE.
+
+Aquí un listado de algunas modificaciones que podemos realizar (Las más comunes).
+
+Renombrar tabla.
+
+Renombrar la tabla usuarios por users.
+
+    ALTER TABLE usuarios RENAME users;
+Agregar una nueva columna.
+
+Agregar a la tabla usuarios, la columna email de tipo VARCHAR con máximo de 50 caracteres.
+
+    ALTER TABLE usuarios ADD email VARCHAR(50);
+Agregar una nueva columna con constraints.
+
+Agregar a la tabla usuarios, la columna email, validando su presencia.
+
+    ALTER TABLE usuarios ADD email VARCHAR(50) NOT NULL DEFAULT '';
+Agregar a la tabla usuarios, la columna email, validando su valor único.
+
+    ALTER TABLE tabla ADD columna VARCHAR(50) UNIQUE;
+Eliminar una columna
+
+Eliminar la columna email de la tabla usuarios.
+
+    ALTER TABLE usuarios DROP COLUMN email;
+Modificar el tipo de dato de una columna
+
+Modificar el tipo de dato de la columna teléfono, (tabla usuarios) de INT a VARCHAR, máximo 50 caracteres.
+
+    ALTER TABLE usuarios MODIFY telefono VARCHAR(50);
+Generar una llave primaria.
+
+Generar una llave primaria a la tabla usuarios.
+
+    ALTER TABLE usuarios ADD id INT UNSIGNED NOT NULL AUTO_INCREMENT, ADD PRIMARY KEY (id);
+Agregar llave foránea.
+
+Agregar una llave foranea a la tabla usuarios, con referencia a la tabla grupos.
+
+    ALTER TABLE usuarios ADD FOREIGN KEY(grupo_id) REFERENCES grupos(grupo_id);
+Eliminar llaves foráneas
+
+Eliminar la llave foranea grupo_id de la tabla usuarios.
+
+    ALTER TABLE usuarios DROP FOREIGN KEY grupo_id;
+
+############## REGISTROS ####################
+
+Mostra los registros de una tabla de todas las nombres_columnas
+
+    SELECT * FROM nombre_tabla;
+
+Mostrar registros en vertical formato caracteres
+
+    SELECT * FROM nombre_tabla\G;
+
+Mostrar solo algunas nombres_columnas
+
+    SELECT Titulo,Libro_id  FROM Libros;
+
+Mostrar una busqueda mas concreta
+
+    SELECT Titulo,Libro_id  FROM Libros WHERE Titulo = "Carrie";
+
+######################### OPERADORES #################
+
+AND todas las condicionales necesitan ser verdaderas
+
+    SELECT *  FROM Libros WHERE Titulo = "Carrie" AND Author_id = "4";
+
+OR solo es necesario que se cumpla una condicion_default
+
+    SELECT *  FROM Libros WHERE Titulo = "Carrie" AND Author_id = "4";
+
+Registros nulos
+
+    SELECT * FROM Autores WHERE Seudonimo IS NULL;
+
+Usa el NOT 
+
+    SELECT * FROM Libros WHERE Seudonimo IS NOT NULL;
+
+Si queremos obtner registros entre un rango determindado
+
+    SELECT Titulo FROM Libros WHERE Fecha_publicacion BETWEEN "1995-01-01" AND "2015-01-31"
+
+Busquedas por listamos
+
+    SELECT * FROM Libros WHERE Titulo IN ("HP y la piedra filosofal","HP y la piedra filosofal")
+
+###################### ALIAS ####################################
+
+se asignara un alias con AS 
+
+SELECT Author_id AS autor, Titulo AS nombre FROM Libros;
+
+##################### ACTUALIZAR REGISTROS #######################
+
+UPDATE Libros SET description = 'Nuevo valor de la descripcion'
+
+***ALERTA ESTA FORMA ACTUALIZARA TODOS LOS REGISTROS
+
+si queremos actualizar solo algun registro 
+
+UPDATE Libros SET description = 'Nuevo valor de la descripcion', VENTAS = 100 WHERE Titulo = 'El hobbit' 
+
+##################### ELIMINAR REGISTROS #######################
+
+eliminar todos los registros de una tabla
+
+DELETE FROM Libros;
+
+si solo queremos eliminar ciertos registros
+
+DELETE FROM Libros WHERE autor_id = 1;
